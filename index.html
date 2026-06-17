@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Request to the Universe</title>
+
+    <!-- Favicon - Grey Spiral -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 8 C14.3 8 8 18.7 8 32 C8 45.3 14.3 56 32 56 C49.7 56 56 45.3 56 32 C56 18.7 49.7 8 32 8' fill='none' stroke='%23999999' stroke-width='2.5' stroke-linecap='round'/><path d='M32 16 C22.1 16 16 24.1 16 32 C16 39.9 22.1 48 32 48 C41.9 48 48 39.9 48 32 C48 24.1 41.9 16 32 16' fill='none' stroke='%23aaaaaa' stroke-width='2' stroke-linecap='round'/><path d='M32 24 C27.6 24 24 27.6 24 32 C24 36.4 27.6 40 32 40 C36.4 40 40 36.4 40 32 C40 27.6 36.4 24 32 24' fill='none' stroke='%23bbbbbb' stroke-width='1.8' stroke-linecap='round'/><circle cx='32' cy='32' r='3' fill='%23cccccc'/></svg>">
+
+    <!-- PNG fallback -->
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABfElEQVR4nO2WT0sCQRzGnw4KoqXgYCLoR3DNoFDbxcXBwaGDQweHTg6C4CBBcOjgJwiuDg5uDnbaQVpJ6NckpHbePMmlcWkfOHjI8d5L7p577rn3XZAkSZIk/Qc1gdPje1tdy7hXZEWnwA2woNWkE7Ahh09t5BI4Aq609l5tgaJGA2DT6AkKvwOWjg88AjdSqCErwLXhI2mhJlcE0/xhHfCT+bK5ArIC7M39aYueTcfrhl43GqhO6t9Tj0NvsBqiA9gHrsCvHfyK5RAeALvAHvCo5Hm6p+BJyi+5geRzLQATs4cBCxz0nQOeAlYwg6OzhueHm8AeBmBqZk5tv7fQ62YDgL5k+9kmA1j2gYcWB9gT7gBjQAXLgeUOh3CdWQA5sA0cAdctn2JgDRgDL8AbBmDTzGx1fN9ne0rLKf9mqpEkSZIkSZL0j30B87Ss/AGM5OgAAAAASUVORK5CYII=">
+
+    <style>
+        /* Global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0b0710;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2111&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .stars-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+            opacity: 0.7;
+            animation: floatStar linear infinite;
+            pointer-events: none;
+        }
+
+        .star:nth-child(1) { width: 4px; height: 4px; left: 10%; top: 20%; animation-duration: 22s; }
+        .star:nth-child(2) { width: 6px; height: 6px; left: 25%; top: 70%; animation-duration: 18s; animation-delay: -4s; }
+        .star:nth-child(3) { width: 3px; height: 3px; left: 45%; top: 40%; animation-duration: 26s; animation-delay: -8s; }
+        .star:nth-child(4) { width: 8px; height: 8px; left: 70%; top: 15%; animation-duration: 20s; animation-delay: -2s; }
+        .star:nth-child(5) { width: 5px; height: 5px; left: 85%; top: 80%; animation-duration: 30s; animation-delay: -12s; }
+        .star:nth-child(6) { width: 10px; height: 10px; left: 55%; top: 85%; animation-duration: 24s; animation-delay: -6s; }
+        .star:nth-child(7) { width: 4px; height: 4px; left: 5%; top: 55%; animation-duration: 28s; animation-delay: -15s; }
+        .star:nth-child(8) { width: 7px; height: 7px; left: 92%; top: 30%; animation-duration: 16s; animation-delay: -3s; }
+        .star:nth-child(9) { width: 12px; height: 12px; left: 35%; top: 10%; animation-duration: 32s; animation-delay: -9s; opacity: 0.5; }
+        .star:nth-child(10) { width: 5px; height: 5px; left: 65%; top: 60%; animation-duration: 19s; animation-delay: -11s; }
+        .star:nth-child(11) { width: 9px; height: 9px; left: 15%; top: 45%; animation-duration: 27s; animation-delay: -1s; }
+        .star:nth-child(12) { width: 3px; height: 3px; left: 78%; top: 92%; animation-duration: 23s; animation-delay: -7s; }
+        .star:nth-child(13) { width: 6px; height: 6px; left: 48%; top: 50%; animation-duration: 21s; animation-delay: -14s; }
+        .star:nth-child(14) { width: 11px; height: 11px; left: 20%; top: 88%; animation-duration: 29s; animation-delay: -5s; }
+        .star:nth-child(15) { width: 4px; height: 4px; left: 60%; top: 25%; animation-duration: 25s; animation-delay: -10s; }
+
+        @keyframes floatStar {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.3; }
+            25% { opacity: 0.9; transform: translate(40px, -30px) scale(1.2) rotate(45deg); }
+            50% { opacity: 0.5; transform: translate(-20px, 40px) scale(0.9) rotate(90deg); }
+            75% { opacity: 0.8; transform: translate(30px, 20px) scale(1.1) rotate(135deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(360deg); opacity: 0.3; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .universe-btn {
+            display: inline-block;
+            background: rgba(255, 215, 100, 0.10);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1.5px solid rgba(255, 215, 0, 0.25);
+            padding: 20px 44px;
+            border-radius: 60px;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            color: rgba(255, 248, 230, 0.9);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.10);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.03);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: lowercase;
+            background-image: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.08), transparent 70%);
+            text-align: center;
+            user-select: none;
+        }
+
+        .universe-btn:hover {
+            transform: scale(1.03);
+            background: rgba(255, 215, 100, 0.18);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.12);
+            color: #fff7e0;
+        }
+
+        .universe-btn:active {
+            transform: scale(0.95);
+        }
+
+        .wish-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            background: rgba(0, 0, 0, 0.30);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px 28px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 440px;
+            animation: fadeSlide 0.4s ease;
+        }
+
+        .wish-form.open {
+            display: flex;
+        }
+
+        @keyframes fadeSlide {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.92) translateY(10px); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); }
+        }
+
+        .wish-input {
+            background: rgba(10, 6, 20, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 50px;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            color: #f0ecff;
+            outline: none;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .wish-input::placeholder {
+            color: rgba(220, 215, 255, 0.35);
+            font-weight: 300;
+            letter-spacing: 0.03em;
+        }
+
+        .wish-input:focus {
+            border-color: rgba(255, 215, 0, 0.35);
+            background: rgba(20, 12, 40, 0.6);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.06), inset 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .payment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .payment-overlay.open {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .payment-modal {
+            background: rgba(10, 6, 20, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            border-radius: 40px;
+            padding: 40px 32px;
+            max-width: 460px;
+            width: 92%;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            animation: modalPop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .payment-modal h2 {
+            color: #ffeec2;
+            font-weight: 300;
+            font-size: 1.6rem;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
+        }
+
+        .cosmic-message {
+            color: rgba(255, 248, 230, 0.7);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.04em;
+            margin: 8px 0 20px 0;
+            padding: 16px 18px;
+            background: rgba(255, 215, 0, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            font-style: italic;
+        }
+
+        .cosmic-message .highlight {
+            color: #ffe08a;
+            font-weight: 400;
+        }
+
+        /* ===== WALLET INFO - No icons, clean text ===== */
+        .wallet-info {
+            background: rgba(255, 215, 0, 0.04);
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            border-radius: 20px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .wallet-info .label {
+            color: rgba(255, 248, 230, 0.4);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+        }
+
+        .wallet-address-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 8px 14px;
+        }
+
+        .wallet-address-display .addr {
+            color: #ffeec2;
+            font-size: 0.85rem;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+
+        .wallet-address-display .copy-btn {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            border-radius: 8px;
+            padding: 4px 12px;
+            color: rgba(255, 248, 230, 0.6);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .wallet-address-display .copy-btn:hover {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffeec2;
+        }
+
+        .wallet-address-display .copy-btn.copied {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: rgba(76, 175, 80, 0.3);
+            color: #81c784;
+        }
+
+        .wallet-note {
+            color: rgba(255, 248, 230, 0.3);
+            font-size: 0.7rem;
+            margin-top: 10px;
+            text-align: center;
+            letter-spacing: 0.04em;
+            line-height: 1.5;
+        }
+
+        .wallet-note strong {
+            color: rgba(255, 248, 230, 0.5);
+        }
+
+        .payment-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .payment-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .payment-row label {
+            color: rgba(255, 248, 230, 0.6);
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+        }
+
+        .currency-select {
+            background: rgba(10, 6, 20, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 30px;
+            padding: 12px 20px;
+            color: #f0ecff;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 140px;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,248,230,0.4)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .currency-select:focus {
+            border-color: rgba(255, 215, 0, 0.35);
+            background: rgba(20, 12, 40, 0.6);
+        }
+
+        .currency-select option {
+            background: #1a1428;
+            color: #f0ecff;
+        }
+
+        .amount-input {
+            background: rgba(10, 6, 20, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 30px;
+            padding: 12px 20px;
+            color: #f0ecff;
+            font-size: 1rem;
+            outline: none;
+            width: 120px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .amount-input:focus {
+            border-color: rgba(255, 215, 0, 0.35);
+            background: rgba(20, 12, 40, 0.6);
+        }
+
+        .amount-input::placeholder {
+            color: rgba(220, 215, 255, 0.3);
+        }
+
+        .payment-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .payment-actions button {
+            padding: 14px 32px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            flex: 1;
+        }
+
+        .btn-pay {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: #ffeec2;
+            backdrop-filter: blur(4px);
+            width: 100%;
+        }
+
+        .btn-pay:hover {
+            background: rgba(255, 215, 0, 0.25);
+            border-color: rgba(255, 215, 0, 0.5);
+            transform: scale(1.02);
+        }
+
+        .btn-pay:active {
+            transform: scale(0.96);
+        }
+
+        .btn-pay:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .letter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .letter-overlay.open {
+            display: flex;
+        }
+
+        .letter-modal {
+            background: rgba(10, 6, 20, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.12);
+            border-radius: 40px;
+            padding: 40px 36px;
+            max-width: 600px;
+            width: 92%;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9);
+            animation: modalPop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            text-align: left;
+        }
+
+        .letter-modal .letter-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .letter-modal .letter-header h2 {
+            color: #ffeec2;
+            font-weight: 300;
+            font-size: 1.8rem;
+            letter-spacing: 0.1em;
+        }
+
+        .letter-modal .letter-header .sub {
+            color: rgba(255, 248, 230, 0.4);
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .letter-content {
+            background: rgba(255, 215, 0, 0.02);
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            border-radius: 24px;
+            padding: 28px 30px;
+            margin-bottom: 20px;
+            min-height: 180px;
+            overflow-y: visible;
+            max-height: none;
+        }
+
+        .letter-content .greeting {
+            color: rgba(255, 248, 230, 0.5);
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            margin-bottom: 14px;
+        }
+
+        .letter-content .letter-body {
+            color: #e8e0d0;
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.8;
+            letter-spacing: 0.02em;
+            padding: 14px 0;
+            border-top: 1px solid rgba(255, 215, 0, 0.06);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.06);
+        }
+
+        .letter-content .letter-body .wish-highlight {
+            color: #ffe08a;
+            font-weight: 400;
+            font-style: italic;
+            font-size: 1.15rem;
+            display: block;
+            padding: 12px 0 8px 0;
+            text-align: center;
+            border-top: 1px dashed rgba(255, 215, 0, 0.1);
+            border-bottom: 1px dashed rgba(255, 215, 0, 0.1);
+            margin: 6px 0;
+        }
+
+        .letter-content .closing {
+            color: rgba(255, 248, 230, 0.4);
+            font-size: 0.9rem;
+            letter-spacing: 0.06em;
+            margin-top: 14px;
+            text-align: right;
+        }
+
+        .letter-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .letter-actions button {
+            padding: 14px 32px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            flex: 1;
+        }
+
+        .btn-letter-send {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            color: #ffeec2;
+            width: 100%;
+        }
+
+        .btn-letter-send:hover {
+            background: rgba(255, 215, 0, 0.25);
+            border-color: rgba(255, 215, 0, 0.5);
+            transform: scale(1.02);
+        }
+
+        .btn-letter-send:active {
+            transform: scale(0.96);
+        }
+
+        .fly-away {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.6rem;
+            background: rgba(255, 215, 0, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: #fff7e0;
+            padding: 20px 40px;
+            border-radius: 80px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.05);
+            pointer-events: none;
+            z-index: 999;
+            animation: flyToCosmos 2.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            white-space: nowrap;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes flyToCosmos {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                filter: blur(0px);
+            }
+            40% {
+                opacity: 1;
+                transform: translate(-50%, -80%) scale(1.3) rotate(10deg);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -300%) scale(0.3) rotate(40deg);
+                filter: blur(20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .universe-btn {
+                font-size: 1.2rem;
+                padding: 16px 28px;
+                letter-spacing: 0.08em;
+            }
+            .wish-form {
+                padding: 24px 18px;
+                width: 92%;
+            }
+            .wish-input {
+                font-size: 1rem;
+                padding: 14px 18px;
+            }
+            .payment-modal {
+                padding: 28px 18px;
+            }
+            .payment-modal h2 {
+                font-size: 1.3rem;
+            }
+            .cosmic-message {
+                font-size: 0.85rem;
+                padding: 14px 14px;
+            }
+            .wallet-address-display {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .wallet-address-display .addr {
+                font-size: 0.7rem;
+                width: 100%;
+                text-align: center;
+            }
+            .wallet-address-display .copy-btn {
+                width: 100%;
+                padding: 6px;
+            }
+            .payment-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .amount-input {
+                width: 100%;
+            }
+            .currency-select {
+                width: 100%;
+            }
+            .payment-actions button {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+            .letter-modal {
+                padding: 24px 16px;
+            }
+            .letter-modal .letter-header h2 {
+                font-size: 1.4rem;
+            }
+            .letter-content {
+                padding: 18px 16px;
+                min-height: 140px;
+            }
+            .letter-content .letter-body {
+                font-size: 0.95rem;
+            }
+            .letter-content .letter-body .wish-highlight {
+                font-size: 1rem;
+            }
+            .letter-actions button {
+                font-size: 0.95rem;
+                padding: 12px 16px;
+            }
+            .fly-away {
+                font-size: 1.2rem;
+                padding: 14px 24px;
+                white-space: normal;
+                max-width: 80vw;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .universe-btn {
+                font-size: 1.0rem;
+                padding: 14px 20px;
+                letter-spacing: 0.06em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars-overlay" aria-hidden="true">
+        <div class="star"></div><div class="star"></div><div class="star"></div>
+        <div class="star"></div><div class="star"></div><div class="star"></div>
+        <div class="star"></div><div class="star"></div><div class="star"></div>
+        <div class="star"></div><div class="star"></div><div class="star"></div>
+        <div class="star"></div><div class="star"></div><div class="star"></div>
+    </div>
+
+    <div class="container">
+        <button class="universe-btn" id="wishToggleBtn">request of the universe</button>
+    </div>
+
+    <div class="wish-form" id="wishForm">
+        <input type="text" class="wish-input" id="wishInput" placeholder="write your request..." autocomplete="off">
+    </div>
+
+    <div class="payment-overlay" id="paymentOverlay">
+        <div class="payment-modal">
+            <h2>cosmic offering</h2>
+            <div class="cosmic-message">
+                "The universe feels the power of your desire.
+                <span class="highlight">Every intention sent with heart</span>
+                resonates across the stars. Trust your voice —
+                it is already heard."
+            </div>
+
+            <!-- ===== WALLET INFO - Clean, no icons ===== -->
+            <div class="wallet-info">
+                <div class="label">send crypto to this address</div>
+                <div class="wallet-address-display">
+                    <span class="addr" id="walletAddressDisplay">0xa553056f11c7d7B8B4B89865B44C9f447D27F306</span>
+                    <button class="copy-btn" id="copyAddressBtn">copy</button>
+                </div>
+                <div class="wallet-note">
+                    <strong>No MetaMask required.</strong> Send from any wallet or exchange.
+                    After sending, click "I sent it" below.
+                </div>
+            </div>
+
+            <div class="payment-tools">
+                <div class="payment-row">
+                    <label for="currencySelect">currency</label>
+                    <select class="currency-select" id="currencySelect">
+                        <option value="ETH">Ethereum (ETH)</option>
+                        <option value="USDC">USDC (ERC-20)</option>
+                        <option value="DAI">DAI (ERC-20)</option>
+                        <option value="MATIC">Polygon (MATIC)</option>
+                    </select>
+                </div>
+                <div class="payment-row">
+                    <label for="amountInput">amount</label>
+                    <input type="text" class="amount-input" id="amountInput" placeholder="0.008" value="0.008">
+                </div>
+            </div>
+
+            <div class="payment-actions">
+                <button class="btn-pay" id="paymentConfirm">I sent it</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="letter-overlay" id="letterOverlay">
+        <div class="letter-modal">
+            <div class="letter-header">
+                <h2>letter to the universe</h2>
+                <div class="sub">your cosmic message</div>
+            </div>
+            <div class="letter-content" id="letterContent">
+                <div class="greeting">dear universe,</div>
+                <div class="letter-body" id="letterBody">
+                    I come before you with an open heart and a clear intention.
+                    My soul carries a vision that I trust you to receive and nurture.
+
+                    <span class="wish-highlight" id="letterWishText">"your wish will appear here"</span>
+
+                    I release this desire into your infinite wisdom,
+                    knowing that what is meant for me will find its way.
+                    I am grateful for the guidance and the signs you send.
+                </div>
+                <div class="closing">— with infinite trust, a soul reaching for the stars</div>
+            </div>
+            <div class="letter-actions">
+                <button class="btn-letter-send" id="letterSend">send to cosmos</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ============================================================
+            // ✅ YOUR WALLET ADDRESS - set to your MetaMask address
+            // ============================================================
+            const YOUR_WALLET_ADDRESS = '0xa553056f11c7d7B8B4B89865B44C9f447D27F306';
+            // ============================================================
+
+            const wishToggleBtn = document.getElementById('wishToggleBtn');
+            const wishForm = document.getElementById('wishForm');
+            const wishInput = document.getElementById('wishInput');
+            const paymentOverlay = document.getElementById('paymentOverlay');
+            const paymentConfirm = document.getElementById('paymentConfirm');
+            const currencySelect = document.getElementById('currencySelect');
+            const amountInput = document.getElementById('amountInput');
+            const copyAddressBtn = document.getElementById('copyAddressBtn');
+            const walletAddressDisplay = document.getElementById('walletAddressDisplay');
+
+            const letterOverlay = document.getElementById('letterOverlay');
+            const letterWishText = document.getElementById('letterWishText');
+            const letterSend = document.getElementById('letterSend');
+
+            let pendingQuery = null;
+            let flyTimer = null;
+
+            // ===== COPY ADDRESS =====
+            copyAddressBtn.addEventListener('click', function() {
+                const address = YOUR_WALLET_ADDRESS;
+                navigator.clipboard.writeText(address).then(() => {
+                    copyAddressBtn.textContent = 'copied';
+                    copyAddressBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyAddressBtn.textContent = 'copy';
+                        copyAddressBtn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = address;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    copyAddressBtn.textContent = 'copied';
+                    copyAddressBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyAddressBtn.textContent = 'copy';
+                        copyAddressBtn.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+
+            // ===== SHOW LETTER WITH FULL TEXT =====
+            function showLetter(wish) {
+                letterWishText.textContent = `"${wish}"`;
+                letterOverlay.classList.add('open');
+                paymentOverlay.classList.remove('open');
+            }
+
+            // ===== SEND LETTER TO COSMOS =====
+            function sendLetter() {
+                letterOverlay.classList.remove('open');
+                const query = letterWishText.textContent.replace(/^"|"$/g, '');
+                sendWishToUniverse(query);
+                wishInput.value = '';
+                wishForm.classList.remove('open');
+            }
+
+            // ================================================================
+            // NO METAMASK REQUIRED - Manual payment confirmation
+            // ================================================================
+            paymentConfirm.addEventListener('click', function() {
+                const currency = currencySelect.value;
+                const amount = amountInput.value.trim() || '0';
+
+                if (!amount || parseFloat(amount) <= 0) {
+                    amountInput.style.borderColor = 'rgba(255, 100, 100, 0.4)';
+                    amountInput.placeholder = 'enter amount';
+                    setTimeout(() => {
+                        amountInput.style.borderColor = '';
+                        amountInput.placeholder = '0.008';
+                    }, 1500);
+                    return;
+                }
+
+                // Show confirmation dialog
+                if (confirm(
+                        `Please send ${amount} ${currency} to:\n\n${YOUR_WALLET_ADDRESS}\n\nAfter sending, click OK to continue.`
+                    )) {
+                    paymentConfirm.disabled = true;
+                    paymentConfirm.textContent = 'waiting...';
+
+                    // Simulate waiting for payment (user confirms they sent it)
+                    setTimeout(() => {
+                        paymentConfirm.disabled = false;
+                        paymentConfirm.textContent = 'I sent it';
+
+                        if (pendingQuery) {
+                            showLetter(pendingQuery);
+                            pendingQuery = null;
+                        }
+                    }, 1000);
+                }
+            });
+
+            // ===== LETTER SEND BUTTON =====
+            letterSend.addEventListener('click', function() {
+                sendLetter();
+            });
+
+            // ===== FLY ANIMATION =====
+            function sendWishToUniverse(query) {
+                createFlyAnimation(query);
+                wishToggleBtn.textContent = 'sent';
+                setTimeout(() => {
+                    wishToggleBtn.textContent = 'request of the universe';
+                }, 1400);
+            }
+
+            function createFlyAnimation(text) {
+                const existingFly = document.querySelector('.fly-away');
+                if (existingFly) {
+                    existingFly.remove();
+                    if (flyTimer) {
+                        clearTimeout(flyTimer);
+                        flyTimer = null;
+                    }
+                }
+
+                const flyEl = document.createElement('div');
+                flyEl.className = 'fly-away';
+                const displayText = text.length > 35 ? text.slice(0, 35) + '…' : text;
+                flyEl.textContent = `「${displayText}」→ ∞`;
+
+                document.body.appendChild(flyEl);
+
+                flyTimer = setTimeout(() => {
+                    if (flyEl.parentNode) {
+                        flyEl.remove();
+                    }
+                    flyTimer = null;
+                }, 3200);
+            }
+
+            // ===== TOGGLE REQUEST FORM =====
+            wishToggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                wishForm.classList.toggle('open');
+                if (wishForm.classList.contains('open')) {
+                    setTimeout(() => wishInput.focus(), 150);
+                }
+            });
+
+            // ===== HANDLE SEND =====
+            function handleSend() {
+                const query = wishInput.value.trim();
+                if (query === '') {
+                    wishInput.style.borderColor = 'rgba(255, 100, 100, 0.4)';
+                    wishInput.placeholder = 'write something...';
+                    setTimeout(() => {
+                        wishInput.style.borderColor = '';
+                        wishInput.placeholder = 'write your request...';
+                    }, 1500);
+                    return;
+                }
+
+                pendingQuery = query;
+                paymentOverlay.classList.add('open');
+                amountInput.value = '0.008';
+                amountInput.style.borderColor = '';
+                currencySelect.value = 'ETH';
+                paymentConfirm.disabled = false;
+                paymentConfirm.textContent = 'I sent it';
+            }
+
+            wishInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSend();
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (wishForm.classList.contains('open')) {
+                    if (!wishForm.contains(e.target) && e.target !== wishToggleBtn) {
+                        wishForm.classList.remove('open');
+                    }
+                }
+            });
+
+            wishForm.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            console.log('Universe ready — receiving wallet:', YOUR_WALLET_ADDRESS);
+            console.log('No MetaMask required! Users can send from any wallet.');
+        })();
+    </script>
+</body>
+</html>
