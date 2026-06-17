@@ -1,0 +1,1 @@
+Request to the Universe is an interactive web application that allows users to send their wishes, dreams, and intentions to the universe through a beautifully designed cosmic interface. Users write their request, make a symbolic cryptocurrency offering, and watch their message fly into the cosmos
